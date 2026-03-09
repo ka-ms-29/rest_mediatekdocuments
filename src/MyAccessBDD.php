@@ -48,10 +48,15 @@ class MyAccessBDD extends AccessBDD {
             
                 // select portant sur une table contenant juste id et libelle
                 return $this->selectTableSimple($table);
+                
             case "commandedocument" :
                  return $this->selectCommandesLivre($champs);   
             case "abonnement":
                 return $this->selectCommandesRevue($champs);
+            case "abonnementFin" :
+                return $this->selectAllAbonnementsFin();
+            case "utilisateurs":
+                return $this->selectUtilisateur($champs);
             case "" :
                 // return $this->uneFonction(parametres);
             default:
@@ -325,8 +330,10 @@ class MyAccessBDD extends AccessBDD {
      * @return int|null
      */
     private function AjoutCommandeDocument(?array $champs) : ?int{
-    if(empty($champs)) return null;
-    $commande = [
+        if (empty($champs)) {
+            return null;
+        }
+        $commande = [
         "id" => $champs["id"],
         "dateCommande" => $champs["dateCommande"],
         "montant" => $champs["montant"]
@@ -397,14 +404,18 @@ class MyAccessBDD extends AccessBDD {
     $res2 = $this->insertOneTupleOneTable("abonnement", $abonnement);   
     return $res2;
     }
-    
+    /**
+     * 
+     * @param array|null $champs
+     * @return bool|null
+     */
     private function supprimerAbonnement(?array $champs) : ?bool{
         if(empty($champs)){
-        return null;
-    }
-    if(!array_key_exists('id', $champs)){
-        return null;
-    }
+            return null;
+        }
+        if(!array_key_exists('id', $champs)){
+            return null;
+        }
         $res1 = $this->deleteTuplesOneTable("abonnement", $champs);
         if(!$res1){
             return false;
@@ -413,5 +424,33 @@ class MyAccessBDD extends AccessBDD {
         return $res2;
     }
     
+    private function selectAllAbonnementsFin() : ?array{
+        //$requete = "Select * from abonnement order by dateFinAbonnement ASC ";
+       	$requete = "Select a.id, a.dateFinAbonnement, a.idRevue, c.id ";
+        $requete .= "from abonnement a join commande c on a.id=c.id ";
+        $requete .= "order by dateFinAbonnement Asc ";	
+        return $this->conn->queryBDD($requete);
+    }
+    
+    private function selectUtilisateur($champs) : ?array{
+        if(empty($champs)){
+            return null;
+        }
+        else{
+            // tuples spécifiques d'une table
+            $requete = "select * from utilisateurs where ";
+            foreach ($champs as $key => $value){
+                if($key == "pwd"){
+                    $requete .= "$key = SHA2(:$key,256) and ";
+                }
+                else{
+                   $requete .= "$key = :$key and ";
+                }
+            }
+            // (enlève le dernier and)
+            $requete = substr($requete, 0, strlen($requete)-5);	          
+            return $this->conn->queryBDD($requete, $champs);
+        }
+    }
    
 }
