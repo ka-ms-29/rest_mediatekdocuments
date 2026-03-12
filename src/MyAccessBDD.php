@@ -30,7 +30,7 @@ class MyAccessBDD extends AccessBDD {
      * @return array|null tuples du résultat de la requête ou null si erreur
      * @override
      */	
-    protected function traitementSelect(string $table, ?array $champs) : ?array{
+    protected function srctraitementSelect(string $table, ?array $champs) : ?array{
         switch($table){  
             case "livre" :
                 return $this->selectAllLivres();
@@ -50,12 +50,12 @@ class MyAccessBDD extends AccessBDD {
                 return $this->selectTableSimple($table);
                 
             case "commandedocument" :
-                 return $this->selectCommandesLivre($champs);   
+                 return $this->selectCommandesDocument($champs);   
             case "abonnement":
                 return $this->selectCommandesRevue($champs);
             case "abonnementFin" :
                 return $this->selectAllAbonnementsFin();
-            case "utilisateurs":
+            case "utilisateur":
                 return $this->selectUtilisateur($champs);
             case "" :
                 // return $this->uneFonction(parametres);
@@ -295,11 +295,11 @@ class MyAccessBDD extends AccessBDD {
         return $this->conn->queryBDD($requete, $champNecessaire);
     }
     /**
-     * 
+     * récupère toutes les commande d'un document (livre/dvd)
      * @param array|null $champs
      * @return array|null
      */
-    private function selectCommandesLivre(?array $champs) : ?array {
+    private function selectCommandesDocument(?array $champs) : ?array {
     if(empty($champs)){
         return null;
     }
@@ -325,7 +325,7 @@ class MyAccessBDD extends AccessBDD {
     return $this->conn->queryBDD($requete, $champNecessaire);
     }
     /**
-     * 
+     * demande d'jout une commande pour un document (livre/dvd)
      * @param array|null $champs
      * @return int|null
      */
@@ -353,7 +353,7 @@ class MyAccessBDD extends AccessBDD {
     return $res2;
     }
     /**
-     * 
+     * récupère toute les abonnement d'un revue
      * @param array|null $champs
      * @return array|null
      */
@@ -380,7 +380,7 @@ class MyAccessBDD extends AccessBDD {
     return $this->conn->queryBDD($requete, $champNecessaire);
     }
     /**
-     * 
+     * demande d'jout une nouvelle abonnement pour un revue
      * @param array|null $champs
      * @return int|null
      */
@@ -405,7 +405,7 @@ class MyAccessBDD extends AccessBDD {
     return $res2;
     }
     /**
-     * 
+     * demande de suppression l'abonnement correspondant à l'id
      * @param array|null $champs
      * @return bool|null
      */
@@ -423,7 +423,10 @@ class MyAccessBDD extends AccessBDD {
         $res2 = $this->deleteTuplesOneTable("commande", $champs);
         return $res2;
     }
-    
+    /**
+     * récupère toutes les abonnements
+     * @return array|null
+     */
     private function selectAllAbonnementsFin() : ?array{
         //$requete = "Select * from abonnement order by dateFinAbonnement ASC ";
        	$requete = "Select a.id, a.dateFinAbonnement, a.idRevue, c.id ";
@@ -431,10 +434,19 @@ class MyAccessBDD extends AccessBDD {
         $requete .= "order by dateFinAbonnement Asc ";	
         return $this->conn->queryBDD($requete);
     }
-    
+    /**
+     * récupère l'utilisateur correspondant aux nom et pwd
+     * @param type $champs
+     * @return array|null
+     */
     private function selectUtilisateur($champs) : ?array{
-        if(empty($champs)){
+        if(empty($champs))
+        {
             return null;
+        }
+        if(!array_key_exists('pwd', $champs))
+        {
+        return null;
         }
         else{
             // tuples spécifiques d'une table
