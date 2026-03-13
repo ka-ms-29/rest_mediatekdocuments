@@ -30,7 +30,7 @@ class MyAccessBDD extends AccessBDD {
      * @return array|null tuples du résultat de la requête ou null si erreur
      * @override
      */	
-    protected function srctraitementSelect(string $table, ?array $champs) : ?array{
+    protected function traitementSelect(string $table, ?array $champs) : ?array{
         switch($table){  
             case "livre" :
                 return $this->selectAllLivres();
@@ -44,11 +44,9 @@ class MyAccessBDD extends AccessBDD {
             case "public" :
             case "rayon" :
             case "etat" :
-            case "suivi " :
-            
+            case "suivi " :           
                 // select portant sur une table contenant juste id et libelle
-                return $this->selectTableSimple($table);
-                
+                return $this->selectTableSimple($table);                
             case "commandedocument" :
                  return $this->selectCommandesDocument($champs);   
             case "abonnement":
