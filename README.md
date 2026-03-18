@@ -1,12 +1,11 @@
 <h1>Présentation de l'API</h1>
-Cette API, écrite en PHP, est basée sur la structure de l'API présentée dans le dépôt suivant :<br>
-https://github.com/CNED-SLAM/rest_chocolatein<br>
+Le lien vers depot principal : https://github.com/CNED-SLAM/rest_mediatekdocuments<br>
 Le readme de ce dépôt présente la structure de la base de l'API (rôle de chaque fichier) et comment l'exploiter.<br>
 Les ajouts faits dans cette API ne concernent que les fichiers '.env' (qui contient les données sensibles d'authentification et d'accès à la BDD) et 'MyAccessBDD.php' (dans lequel de nouvelles fonctions ont été ajoutées pour répondre aux demandes de l'application).<br>
 Cette API permet d'exécuter des requêtes SQL sur la BDD Mediatek86 créée avec le SGBDR MySQL.<br>
 Elle est accessible via une authentification "basique" (avec login="admin", pwd="adminpwd").<br>
 Sa vocation actuelle est de répondre aux demandes de l'application MediaTekDocuments, mise en ligne sur le dépôt :<br>
-https://github.com/CNED-SLAM/MediaTekDocuments
+https://github.com/ka-ms-29/mediatekdocuments-Atelier2
 
 <h1>Installation de l'API en local</h1>
 Pour tester l'API REST en local, voici le mode opératoire (similaire à celui donné dans le dépôt d'API de base) :
@@ -69,4 +68,11 @@ Dans MyAccessBDD, plusieurs fonctions ont été ajoutées pour répondre aux dem
    <li><strong>selectAllDvd : </strong>même chose pour les dvd.</li>
    <li><strong>selectAllRevues : </strong>même chose pour les revues.</li>
    <li><strong>selectExemplairesRevue : </strong>récupère les exemplaires d'une revue dont l'id sera donné.</li>
+   <li><strong>selectCommandesDocument  : </strong>récupère les commandes d’un document (livre/dvd) correspondant de l’id donnée.</li>
+   <li><strong>AjoutCommandeDocument  : </strong>ajout une commande pour un document (livre/dvd).</li>
+   <li><strong>selectCommandesRevue  : </strong>récupère les commandes d’une revue (abonnement de revue)</li>
+   <li><strong>AjoutAbonnement  : </strong>ajout une commande (abonnement) pour une revue.</li>
+   <li><strong>supprimerAbonnement  : </strong>supprime un abonnement de revue, de la table abonnement ainsi que de la table mère Commande.</li>
+   <li><strong>selectAllAbonnementsFin  : </strong>rrécupère tous les abonnements.</li>
+   <li><strong>selectUtilisateur  : </strong>récupère l’utilisateur qui correspond au login et mot de passe données.</li>
 </ul>
